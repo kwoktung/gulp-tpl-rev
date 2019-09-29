@@ -1,6 +1,6 @@
 {
   "name": "gulp-tpl-rev",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "template resource url revisioning by appending content hash to filenames: unicorn.css => unicorn.css?_v=1",
   "main": "dist/index.js",
   "typings": "plugin.ts",

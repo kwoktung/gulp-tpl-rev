@@ -46,7 +46,7 @@ export default function(options: PluginOption) {
             rewriter.emitStartTag(token);
         });
         rewriter.on("text", function(token) {
-            rewriter.emitText(token)
+            rewriter.emitRaw(token.text)
         })
         rewriter.on("data", function(token) {
             tpl += token
