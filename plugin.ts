@@ -37,8 +37,11 @@ export default function(options: PluginOption) {
             if (attr && attr.value && options.match!(attr.value)) {
                 const urlObject = url.parse(attr.value, true);
                 const query = urlObject.query;
-                query[options.name!] = options.hash!(urlObject.pathname);
-                attr.value = url.format(urlObject);
+                const hash = options.hash!(urlObject.pathname);
+                if (hash) {
+                    query[options.name!] = hash;
+                    attr.value = url.format(urlObject);
+                }
             }
             rewriter.emitStartTag(token);
         });

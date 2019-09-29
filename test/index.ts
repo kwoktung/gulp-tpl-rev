@@ -1,13 +1,19 @@
 import * as util from "gulp-util";
 import * as fs from "fs";
+import * as path from "path";
 import * as assert from "assert";
 import plugin from "../";
 
 
 describe("plugin", function() {
     const tpl = plugin({
-        name: "_v",
-        hash(pathname){ return "1" }
+        hash(pathname){ 
+            const { ext } = path.parse(pathname!)
+            if (ext === ".css" || ext === ".js") {
+                return "1"
+            }
+            return ""
+        }
     })
     const file = new util.File({
         path: "/test/index.html",

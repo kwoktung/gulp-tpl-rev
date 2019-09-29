@@ -4,7 +4,7 @@
 ## Install
 
 ```
-$ npm install --save-dev gulp-rev
+$ npm install --save-dev gulp-tpl-rev
 ```
 
 ## Usage
