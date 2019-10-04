@@ -6,14 +6,14 @@ import plugin from "../";
 
 
 describe("plugin", function() {
-    const tpl = plugin({
-        hash(pathname){ 
-            const { ext } = path.parse(pathname!)
+    const tpl = plugin(function(pathname) { 
+        if (pathname !== undefined) {
+            const { ext } = path.parse(pathname)
             if (ext === ".css" || ext === ".js") {
                 return "1"
             }
-            return ""
         }
+        return ""
     })
     const file = new File({
         path: "/test/index.html",
@@ -21,7 +21,7 @@ describe("plugin", function() {
     });
     tpl.write(file)
     tpl.end();
-    it("should append ?_v=1 to link", function() {
+    it("should append ?_v=1 to link and script", function() {
         assert.equal(file.contents.toString(), fs.readFileSync('./test/index_o.html', 'utf-8'))
     })
 })

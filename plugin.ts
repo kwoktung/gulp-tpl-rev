@@ -9,21 +9,28 @@ interface PluginOption {
     match?(pathname: string): boolean
 }
 
-const defaultOptions: PluginOption = {
-    name: "_v",
-    hash: function(pathname: string) { return "" + Date.now() },
-    match: function(pathname: string) { return /^\/[^/]+/.test(pathname) }
+interface PluginHash {
+    (pathname?: string):string
 }
 
-export default function(options: PluginOption) {
-    if (!options.name) {
-        options.name = defaultOptions.name
+export default function(params: PluginOption|PluginHash) {
+    const options = {
+        name: "_v",
+        hash: function(pathname?: string): string { return "" + Date.now() },
+        match: function(pathname: string): boolean { return /^\/[^/]+/.test(pathname) }
     }
-    if(!options.hash) {
-        options.hash = defaultOptions.hash
-    }
-    if (!options.match) {
-        options.match = defaultOptions.match
+    if (typeof params === "function") {
+        options.hash = params
+    } else {
+        if (params.name !== undefined) {
+            options.name = params.name
+        }
+        if(typeof params.hash === "function") {
+            options.hash = params.hash
+        }
+        if (typeof params.match === "function") {
+            options.match = params.match
+        }
     }
     return through2.obj(function(file: File, _, cb) {
         if(file.isBuffer()) {
