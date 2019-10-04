@@ -1,4 +1,4 @@
-import * as util from "gulp-util";
+import { default as File } from "vinyl";
 import * as fs from "fs";
 import * as path from "path";
 import * as assert from "assert";
@@ -15,7 +15,7 @@ describe("plugin", function() {
             return ""
         }
     })
-    const file = new util.File({
+    const file = new File({
         path: "/test/index.html",
         contents: fs.readFileSync("./test/index.html")
     });

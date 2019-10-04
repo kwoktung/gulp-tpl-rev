@@ -1,6 +1,7 @@
 import through2 from "through2";
 import RewritingStream from "parse5-html-rewriting-stream"
 import * as url from "url";
+import { default as File } from "vinyl";
 
 interface PluginOption {
     name?: string,
@@ -24,37 +25,41 @@ export default function(options: PluginOption) {
     if (!options.match) {
         options.match = defaultOptions.match
     }
-    return through2.obj(function(file, _, cb) {
-        let tpl = "";
-        const rewriter = new RewritingStream();
-        rewriter.on('startTag', token => {
-            let attr;
-            if (token.tagName === 'link') {
-                attr = token.attrs.filter(attr => attr.name === "href")[0];
-            } else if (token.tagName === 'script') {
-                attr = token.attrs.filter(attr => attr.name === "src")[0];
-            }
-            if (attr && attr.value && options.match!(attr.value)) {
-                const urlObject = url.parse(attr.value, true);
-                const query = urlObject.query;
-                const hash = options.hash!(urlObject.pathname);
-                if (hash) {
-                    query[options.name!] = hash;
-                    attr.value = url.format(urlObject);
+    return through2.obj(function(file: File, _, cb) {
+        if(file.isBuffer()) {
+            let tpl = "";
+            const rewriter = new RewritingStream();
+            rewriter.on('startTag', token => {
+                let attr;
+                if (token.tagName === 'link') {
+                    attr = token.attrs.filter(attr => attr.name === "href")[0];
+                } else if (token.tagName === 'script') {
+                    attr = token.attrs.filter(attr => attr.name === "src")[0];
                 }
-            }
-            rewriter.emitStartTag(token);
-        });
-        rewriter.on("text", function(token) {
-            rewriter.emitRaw(token.text)
-        })
-        rewriter.on("data", function(token) {
-            tpl += token
-        })
-        rewriter.on("end", function() {
-            file.contents = Buffer.from(tpl)
+                if (attr && attr.value && options.match!(attr.value)) {
+                    const urlObject = url.parse(attr.value, true);
+                    const query = urlObject.query;
+                    const hash = options.hash!(urlObject.pathname);
+                    if (hash) {
+                        query[options.name!] = hash;
+                        attr.value = url.format(urlObject);
+                    }
+                }
+                rewriter.emitStartTag(token);
+            })
+            rewriter.on("text", function(token) {
+                rewriter.emitRaw(token.text)
+            })
+            rewriter.on("data", function(token) {
+                tpl += token
+            })
+            rewriter.on("end", function() {
+                file.contents = Buffer.from(tpl)
+                cb(null, file)
+            })
+            rewriter.end(file.contents.toString())
+        } else {
             cb(null, file)
-        })
-        rewriter.end(file.contents.toString())
+        }
     })
 }

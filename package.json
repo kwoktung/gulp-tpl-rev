@@ -22,14 +22,15 @@
   "homepage": "https://github.com/kwoktung/gulp-tpl-rev#readme",
   "dependencies": {
     "parse5-html-rewriting-stream": "^5.1.0",
-    "through2": "^3.0.1"
+    "through2": "^3.0.1",
+    "vinyl": "^2.2.0"
   },
   "devDependencies": {
     "@types/gulp-util": "^3.0.34",
     "@types/mocha": "^5.2.7",
     "@types/parse5-html-rewriting-stream": "^5.1.2",
     "@types/through2": "^2.0.34",
-    "gulp-util": "^3.0.8",
+    "@types/vinyl": "^2.0.3",
     "mocha": "^6.2.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
