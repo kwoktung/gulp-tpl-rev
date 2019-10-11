@@ -20,9 +20,7 @@ const fs= require('fs')
 
 exports.default = () => (
 	gulp.src('src/*.html')
-		.pipe(tpl({
-			name: '_v',
-			hash: function(pathname) {
+		.pipe(tpl( function(pathname) {
 				const { ext } = path.parse(pathname)
 				const fullpath = path.join(__dirname, 'wwwroot', pathname)
 				if (fs.existsSync(fullpath)) {
@@ -33,7 +31,7 @@ exports.default = () => (
 				}
 				return ""
 			}
-		}))
+		))
 		.pipe(gulp.dest('dist'))
 );
 ```
