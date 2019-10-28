@@ -36,7 +36,7 @@ export default function(params: PluginOption|PluginHash) {
         if(file.isBuffer()) {
             let tpl = "";
             const rewriter = new RewritingStream();
-            rewriter.on('startTag', token => {
+            rewriter.on('startTag', (token, html) => {
                 let attr;
                 if (token.tagName === 'link') {
                     attr = token.attrs.filter(attr => attr.name === "href")[0];
@@ -51,8 +51,10 @@ export default function(params: PluginOption|PluginHash) {
                         query[options.name!] = hash;
                         attr.value = url.format(urlObject);
                     }
+                    rewriter.emitStartTag(token);
+                } else {
+                    rewriter.emitRaw(html)
                 }
-                rewriter.emitStartTag(token);
             })
             rewriter.on("text", function(token) {
                 rewriter.emitRaw(token.text)

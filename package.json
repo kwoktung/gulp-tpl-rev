@@ -3,7 +3,6 @@
   "version": "1.1.0",
   "description": "template resource url revisioning by appending content hash to filenames: unicorn.css => unicorn.css?_v=1",
   "main": "dist/index.js",
-  "typings": "plugin.ts",
   "scripts": {
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && tsc",

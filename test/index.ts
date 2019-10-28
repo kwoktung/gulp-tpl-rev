@@ -2,7 +2,7 @@ import { default as File } from "vinyl";
 import * as fs from "fs";
 import * as path from "path";
 import * as assert from "assert";
-import plugin from "../";
+import plugin from "../plugin";
 
 
 describe("plugin", function() {
